@@ -8,26 +8,12 @@ const timeout = function (s) {
     });
 };
 
-export const fetchSearchData = async function (query) {
+export const fetchAPI = async function (url) {
     try {
-        const response = await fetch(
-            `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
-        );
-        const data = await response.json();
-
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-export const fetchRecipeData = async function (id) {
-    try {
-        if (!id) return;
-        const response = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+        const response = await fetch(url);
         const data = await response.json();
         return data;
     } catch (err) {
-        console.error(err);
+        console.error(`❌❌${err}❌❌`);
     }
 };

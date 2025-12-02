@@ -1,24 +1,25 @@
 {
-  "name": "forkify_selfdeveloped",
-  "version": "1.0.0",
-  "description": "a web application uses for finding cooking recipes ",
-  "default": "index.html",
-  "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MahyarCode/Forkify_v2.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MahyarCode/Forkify_v2/issues"
-  },
-  "homepage": "https://github.com/MahyarCode/Forkify_v2#readme",
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.16.1",
-    "parcel": "^2.16.1"
-  }
+    "name": "forkify_selfdeveloped",
+    "version": "1.0.0",
+    "description": "a web application uses for finding cooking recipes ",
+    "default": "index.html",
+    "type": "module",
+    "scripts": {
+        "start": "parcel index.html",
+        "build": "parcel build index.html --dist-dir public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MahyarCode/Forkify_v2.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/MahyarCode/Forkify_v2/issues"
+    },
+    "homepage": "https://github.com/MahyarCode/Forkify_v2#readme",
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.16.1",
+        "parcel": "^2.16.1"
+    }
 }

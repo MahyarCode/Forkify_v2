@@ -1,11 +1,12 @@
 'use strict';
-import { fetchSearchData, fetchRecipeData } from '../helper.js';
+import { fetchAPI } from '../helper.js';
 
 // TODO Search Result ---------------------------------------------------------
-
-//FIXME first, format the fetch data
-const formattedResult = function (nameData) {
-    const { recipes } = nameData.data;
+export const loadResult = async function (query) {
+    const fetchData = await fetchAPI(
+        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
+    );
+    const { recipes } = fetchData.data;
 
     const data = recipes.map(obj => {
         return { id: obj.id, image: obj.image_url, publisher: obj.publisher, title: obj.title };
@@ -13,20 +14,13 @@ const formattedResult = function (nameData) {
     return data;
 };
 
-const searchValue = document.querySelector('.search__field');
-
-//FIXME it outputs the formatted data from API
-export const loadResult = async function () {
-    const query = searchValue.value;
-    const data = await fetchSearchData(query);
-    const outputData = formattedResult(data);
-    return outputData;
-};
-
 // TODO Present Recipe ---------------------------------------------------------
-//FIXME first, format the fetch data
-const formattedRecipe = function (nameData) {
-    const { recipe } = nameData.data;
+export const loadRecipe = async function () {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    const fetchData = await fetchAPI(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+
+    const { recipe } = fetchData.data;
 
     const data = {
         id: recipe.id,
@@ -40,12 +34,4 @@ const formattedRecipe = function (nameData) {
     };
 
     return data;
-};
-//FIXME it outputs the formatted data from API
-export const loadRecipe = async function () {
-    const id = window.location.hash.slice(1);
-    if (!id) return;
-    const data = await fetchRecipeData(id);
-    const outputData = formattedRecipe(data);
-    return outputData;
 };
