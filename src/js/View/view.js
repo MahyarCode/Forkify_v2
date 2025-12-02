@@ -7,6 +7,7 @@ export default class View {
     render(data) {
         this._data = data;
         const html = this._getHTML();
+
         this._parentElement.insertAdjacentHTML('beforeend', html);
     }
 }

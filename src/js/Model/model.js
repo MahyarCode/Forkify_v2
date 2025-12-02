@@ -1,6 +1,15 @@
 'use strict';
 import { fetchAPI } from '../helper.js';
 
+export const state = {
+    recipe: {},
+    results: [],
+    currentPageResult: [],
+    isBookmark: false,
+    page: 1,
+    lastPage: null,
+};
+
 // TODO Search Result ---------------------------------------------------------
 export const loadResult = async function (query) {
     const fetchData = await fetchAPI(
@@ -11,7 +20,7 @@ export const loadResult = async function (query) {
     const data = recipes.map(obj => {
         return { id: obj.id, image: obj.image_url, publisher: obj.publisher, title: obj.title };
     });
-    return data;
+    state.results = data;
 };
 
 // TODO Present Recipe ---------------------------------------------------------
@@ -32,6 +41,14 @@ export const loadRecipe = async function () {
         ingredients: recipe.ingredients,
         source: recipe.source_url,
     };
+    state.recipe = data;
+};
 
-    return data;
+// TODO Pagination ---------------------------------------------------------
+export const resultPagination = function (page) {
+    const min = (page - 1) * 10;
+    const max = page * 10;
+
+    state.lastPage = Math.ceil(state.results.length / 10);
+    state.currentPageResult = state.results.slice(min, max);
 };

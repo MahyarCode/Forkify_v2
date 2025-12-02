@@ -2,26 +2,30 @@
 import * as model from '../Model/model.js';
 import ResultsView from '../View/resultsView.js';
 import RecipeView from '../View/recipeView.js';
+import Pagination from '../View/paginationView.js';
 
 const controlSearchResult = async function () {
     const query = document.querySelector('.search__field').value;
 
     if (!query) return;
 
-    console.log(query);
+    await model.loadResult(query);
 
-    const data = await model.loadResult(query);
+    model.resultPagination(model.state.page);
 
-    ResultsView.render(data);
+    Pagination.render();
+
+    ResultsView.render(model.state.currentPageResult);
 };
 
 const controlShowRecipe = async function () {
-    const data = await model.loadRecipe();
+    await model.loadRecipe();
 
-    if (!data) return;
+    if (!model.state.results) return;
 
-    RecipeView.render(data);
+    RecipeView.render(model.state.recipe);
 };
 
 RecipeView.addHandlerRecipe(controlShowRecipe);
 ResultsView.addHandlerSearchResult(controlSearchResult);
+Pagination.addHandlerPagination(controlSearchResult);
