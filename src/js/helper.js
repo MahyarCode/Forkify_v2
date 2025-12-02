@@ -1,4 +1,4 @@
-const recipeContainer = document.querySelector('.recipe');
+'use strict';
 
 const timeout = function (s) {
     return new Promise(function (_, reject) {
@@ -7,8 +7,3 @@ const timeout = function (s) {
         }, s * 1000);
     });
 };
-
-// NEW API URL (instead of the one shown in the video)
-// https://forkify-api.jonas.io
-
-///////////////////////////////////////
