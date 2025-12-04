@@ -75,3 +75,12 @@ export const deleteBookmark = function (recipe) {
     delete state.results[bookmarkIndex].bookmark;
     state.recipe.bookmark = false;
 };
+
+// TODO servings ---------------------------------------------------------
+export const updateServing = function (recipe, newServing) {
+    state.recipe.ingredients.forEach(ing => {
+        ing.quantity = ing.quantity * (newServing / recipe.servings);
+    });
+
+    recipe.servings = newServing;
+};

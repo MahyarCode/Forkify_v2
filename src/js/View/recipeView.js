@@ -1,6 +1,6 @@
 'use strict';
 import icons from 'url:../../img/icons.svg';
-import View from './View.js';
+import View from './view.js';
 
 class RecipeView extends View {
     _parentElement = document.querySelector('.recipe');
@@ -40,12 +40,16 @@ class RecipeView extends View {
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
+              <button data-servings="${
+                  this._data.servings - 1
+              }" class="btn--tiny btn--decrease-servings">
                 <svg>
                   <use href="${icons}#icon-minus-circle"></use>
                 </svg>
               </button>
-              <button class="btn--tiny btn--increase-servings">
+              <button data-servings="${
+                  this._data.servings + 1
+              }" class="btn--tiny btn--increase-servings">
                 <svg>
                   <use href="${icons}#icon-plus-circle"></use>
                 </svg>
@@ -75,7 +79,7 @@ class RecipeView extends View {
               <svg class="recipe__icon">
                 <use href="${icons}#icon-check"></use>
               </svg>
-              <div class="recipe__quantity">${ing.quantity}</div>
+              <div class="recipe__quantity">${ing.quantity ? ing.quantity.toFixed(2) : ''}</div>
               <div class="recipe__description">
                 <span class="recipe__unit">${ing.unit}</span>
                 ${ing.description}
