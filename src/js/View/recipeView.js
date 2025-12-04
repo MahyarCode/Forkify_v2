@@ -4,6 +4,7 @@ import View from './View.js';
 
 class RecipeView extends View {
     _parentElement = document.querySelector('.recipe');
+    _resultsElement = document.querySelector('.results');
 
     addHandlerRecipe(handlerFn) {
         ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handlerFn));
@@ -59,7 +60,7 @@ class RecipeView extends View {
           </div>
           <button class="btn--round">
             <svg class="">
-              <use href="${icons}#icon-bookmark-fill"></use>
+              <use href="${icons}#icon-bookmark${this._data.bookmark ? '-fill' : ''}"></use>
             </svg>
           </button>
         </div>

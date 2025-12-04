@@ -1,3 +1,4 @@
+
 .preview {
   &__link {
     &:link,
@@ -11,12 +12,12 @@
     }
 
     &:hover {
-      background-color: $color-grey-light-1;
+      background-color: #ffd1bd;
       transform: translateY(-2px);
     }
 
     &--active {
-      background-color: $color-grey-light-1;
+      background-color: #fed2ad;
     }
   }
 

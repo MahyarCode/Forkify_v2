@@ -5,7 +5,7 @@ export const state = {
     recipe: {},
     results: [],
     currentPageResult: [],
-    isBookmark: false,
+    bookmark: [],
     page: 1,
     lastPage: null,
 };
@@ -42,6 +42,11 @@ export const loadRecipe = async function () {
         source: recipe.source_url,
     };
     state.recipe = data;
+
+    if (state.results.length === 0) return;
+
+    const item = state.results.find(el => el.id === state.recipe.id);
+    state.recipe.bookmark = item.bookmark ? true : false;
 };
 
 // TODO Pagination ---------------------------------------------------------
@@ -51,4 +56,22 @@ export const resultPagination = function (page) {
 
     state.lastPage = Math.ceil(state.results.length / 10);
     state.currentPageResult = state.results.slice(min, max);
+};
+
+// TODO bookmark ---------------------------------------------------------
+export const addBookmark = function (recipe) {
+    state.bookmark.push(recipe);
+
+    const bookmarkIndex = state.results.findIndex(el => el.id === recipe.id);
+    state.results[bookmarkIndex].bookmark = true;
+    state.recipe.bookmark = true;
+};
+
+export const deleteBookmark = function (recipe) {
+    const itemIndex = state.bookmark.findIndex(el => el.id === recipe.id);
+    state.bookmark.splice(itemIndex, 1);
+
+    const bookmarkIndex = state.results.findIndex(el => el.id === recipe.id);
+    delete state.results[bookmarkIndex].bookmark;
+    state.recipe.bookmark = false;
 };

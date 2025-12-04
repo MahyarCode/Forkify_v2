@@ -13,6 +13,12 @@ class ResultsView extends View {
         });
     }
 
+    addHandlerUpdateResult() {
+        this._parentElement.addEventListener('click', function (e) {
+            const btn = e.target.closest('.preview__link');
+        });
+    }
+
     _getHTML() {
         if (!this._data) return;
         this._parentElement.innerHTML = '';
@@ -21,7 +27,7 @@ class ResultsView extends View {
             .map(obj => {
                 return `
           <li class="preview">
-            <a class="preview__link preview__link--active" href="#${obj.id}">
+            <a class="preview__link" href="#${obj.id}">
               <figure class="preview__fig">
                 <img src="${obj.image}" alt="Test" />
               </figure>

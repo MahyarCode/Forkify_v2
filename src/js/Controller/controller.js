@@ -3,6 +3,7 @@ import * as model from '../Model/model.js';
 import ResultsView from '../View/resultsView.js';
 import RecipeView from '../View/recipeView.js';
 import Pagination from '../View/paginationView.js';
+import Bookmark from '../View/bookmarkView.js';
 
 const controlSearchResult = async function () {
     const query = document.querySelector('.search__field').value;
@@ -22,10 +23,31 @@ const controlShowRecipe = async function () {
     await model.loadRecipe();
 
     if (!model.state.results) return;
+    if (Object.keys(model.state.recipe).length === 0) return;
 
     RecipeView.render(model.state.recipe);
 };
 
-RecipeView.addHandlerRecipe(controlShowRecipe);
-ResultsView.addHandlerSearchResult(controlSearchResult);
-Pagination.addHandlerPagination(controlSearchResult);
+const controlBookmark = function () {
+    const recipe = model.state.recipe;
+
+    if (model.state.bookmark.some(el => el.id === recipe.id)) {
+        model.deleteBookmark(recipe);
+    } else {
+        model.addBookmark(recipe);
+    }
+
+    Bookmark.render(model.state.bookmark);
+
+    RecipeView.render(model.state.recipe);
+};
+
+const init = function () {
+    window.location.hash = '';
+    RecipeView.addHandlerRecipe(controlShowRecipe);
+    Bookmark.addHandlerBookmark(controlBookmark);
+
+    ResultsView.addHandlerSearchResult(controlSearchResult);
+    Pagination.addHandlerPagination(controlSearchResult);
+};
+init();
