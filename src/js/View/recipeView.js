@@ -1,6 +1,6 @@
 'use strict';
 import icons from 'url:../../img/icons.svg';
-import View from './view.js';
+import View from './View.js';
 
 class RecipeView extends View {
     _parentElement = document.querySelector('.recipe');

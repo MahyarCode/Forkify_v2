@@ -13,12 +13,6 @@ class ResultsView extends View {
         });
     }
 
-    addHandlerUpdateResult() {
-        this._parentElement.addEventListener('click', function (e) {
-            const btn = e.target.closest('.preview__link');
-        });
-    }
-
     _getHTML() {
         if (!this._data) return;
         this._parentElement.innerHTML = '';

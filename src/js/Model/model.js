@@ -1,5 +1,6 @@
 'use strict';
 import { fetchAPI } from '../helper.js';
+import { API_KEY } from '../config.js';
 
 export const state = {
     recipe: {},
@@ -13,21 +14,30 @@ export const state = {
 // TODO Search Result ---------------------------------------------------------
 export const loadResult = async function (query) {
     const fetchData = await fetchAPI(
-        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
+        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}&key=${API_KEY}`
     );
     const { recipes } = fetchData.data;
 
     const data = recipes.map(obj => {
-        return { id: obj.id, image: obj.image_url, publisher: obj.publisher, title: obj.title };
+        return {
+            id: obj.id,
+            image: obj.image_url,
+            publisher: obj.publisher,
+            title: obj.title,
+            ...(obj.key && { key: obj.key }),
+        };
     });
     state.results = data;
+    console.log(data);
 };
 
 // TODO Present Recipe ---------------------------------------------------------
 export const loadRecipe = async function () {
     const id = window.location.hash.slice(1);
     if (!id) return;
-    const fetchData = await fetchAPI(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+    const fetchData = await fetchAPI(
+        `https://forkify-api.herokuapp.com/api/v2/recipes/${id}?key=${API_KEY}`
+    );
 
     const { recipe } = fetchData.data;
 
@@ -40,9 +50,10 @@ export const loadRecipe = async function () {
         servings: recipe.servings,
         ingredients: recipe.ingredients,
         source: recipe.source_url,
+        ...(recipe.key && { key: recipe.key }),
     };
     state.recipe = data;
-
+    console.log(data);
     if (state.results.length === 0) return;
 
     const item = state.results.find(el => el.id === state.recipe.id);

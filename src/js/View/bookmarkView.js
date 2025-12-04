@@ -1,6 +1,6 @@
 'use strict';
 import icons from 'url:../../img/icons.svg';
-import View from './View';
+import View from './View.js';
 
 class Bookmark extends View {
     _parentElement = document.querySelector('.recipe');

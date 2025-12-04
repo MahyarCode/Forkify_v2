@@ -1,6 +1,6 @@
 'use strict';
 
-import View from './view.js';
+import View from './View.js';
 import icons from 'url:../../img/icons.svg';
 
 class Servings extends View {
@@ -11,6 +11,8 @@ class Servings extends View {
         this._parentElement.addEventListener('click', function (e) {
             e.preventDefault();
             const btn = e.target.closest('.btn--tiny');
+
+            if (!btn) return;
 
             const updateTo = +btn.dataset.servings;
 
