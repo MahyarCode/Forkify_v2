@@ -9,12 +9,14 @@ export const state = {
     bookmark: [],
     page: 1,
     lastPage: null,
+    searchQuery: '',
 };
 
 // TODO Search Result ---------------------------------------------------------
 export const loadResult = async function (query) {
+    state.searchQuery = query;
     const fetchData = await fetchAPI(
-        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}&key=${API_KEY}`
+        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${state.searchQuery}&key=${API_KEY}`
     );
     const { recipes } = fetchData.data;
 
@@ -28,10 +30,23 @@ export const loadResult = async function (query) {
         };
     });
     state.results = data;
-    console.log(data);
 };
 
-// TODO Present Recipe ---------------------------------------------------------
+// TODO Load Recipe ---------------------------------------------------------
+const createRecipe = function (fetchedRecipe) {
+    return {
+        id: fetchedRecipe.id,
+        image: fetchedRecipe.image_url,
+        title: fetchedRecipe.title,
+        publisher: fetchedRecipe.publisher,
+        cookingTime: fetchedRecipe.cooking_time,
+        servings: fetchedRecipe.servings,
+        ingredients: fetchedRecipe.ingredients,
+        source: fetchedRecipe.source_url,
+        ...(fetchedRecipe.key && { key: fetchedRecipe.key }),
+    };
+};
+
 export const loadRecipe = async function () {
     const id = window.location.hash.slice(1);
     if (!id) return;
@@ -41,19 +56,9 @@ export const loadRecipe = async function () {
 
     const { recipe } = fetchData.data;
 
-    const data = {
-        id: recipe.id,
-        image: recipe.image_url,
-        title: recipe.title,
-        publisher: recipe.publisher,
-        cookingTime: recipe.cooking_time,
-        servings: recipe.servings,
-        ingredients: recipe.ingredients,
-        source: recipe.source_url,
-        ...(recipe.key && { key: recipe.key }),
-    };
+    const data = createRecipe(recipe);
     state.recipe = data;
-    console.log(data);
+
     if (state.results.length === 0) return;
 
     const item = state.results.find(el => el.id === state.recipe.id);
@@ -74,8 +79,11 @@ export const addBookmark = function (recipe) {
     state.bookmark.push(recipe);
 
     const bookmarkIndex = state.results.findIndex(el => el.id === recipe.id);
+
     state.results[bookmarkIndex].bookmark = true;
     state.recipe.bookmark = true;
+
+    localStorage.setItem('bookmarks', JSON.stringify(state.bookmark));
 };
 
 export const deleteBookmark = function (recipe) {
@@ -83,8 +91,12 @@ export const deleteBookmark = function (recipe) {
     state.bookmark.splice(itemIndex, 1);
 
     const bookmarkIndex = state.results.findIndex(el => el.id === recipe.id);
+
     delete state.results[bookmarkIndex].bookmark;
+
     state.recipe.bookmark = false;
+
+    localStorage.setItem('bookmarks', JSON.stringify(state.bookmark));
 };
 
 // TODO servings ---------------------------------------------------------
@@ -94,4 +106,47 @@ export const updateServing = function (recipe, newServing) {
     });
 
     recipe.servings = newServing;
+};
+
+// TODO Change data For PostRecipe ---------------------------------------------------------
+export const changeData = function (form) {
+    const ingredientForm = Object.entries(form).filter(
+        el => el[0].includes('ingredient') && el[1] !== ''
+    );
+
+    const ingredients = ingredientForm.map(el => {
+        const ing = el[1].split(',');
+        return { quantity: ing[0], unit: ing[1], description: ing[2] };
+    });
+
+    const newData = {
+        image_url: form.image,
+        title: form.title,
+        publisher: form.publisher,
+        cooking_time: form.cookingTime,
+        servings: form.servings,
+        source_url: form.sourceUrl,
+        ingredients,
+    };
+
+    return newData;
+};
+
+export const sendRecipe = async function (sendData) {
+    const apiUrl = `https://forkify-api.herokuapp.com/api/v2/recipes?search=${state.searchQuery}&key=${API_KEY}`; // Replace with your API endpoint
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+    };
+
+    const sentData = await fetch(apiUrl, requestOptions);
+    const userData = await sentData.json();
+
+    userData.data.recipe.bookmark = true;
+
+    state.recipe = createRecipe(userData.data.recipe);
+    state.results.unshift(userData.data.recipe);
 };

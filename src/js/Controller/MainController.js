@@ -1,6 +1,5 @@
 'use strict';
 import * as model from '../Model/model.js';
-import View from '../View/View.js';
 import ResultsView from '../View/resultsView.js';
 import RecipeView from '../View/recipeView.js';
 import Pagination from '../View/paginationView.js';
@@ -25,7 +24,6 @@ const controlSearchResult = async function () {
 };
 
 const controlShowRecipe = async function () {
-    debugger;
     if (window.location.hash) {
         RecipeView.renderSpinner();
     }
@@ -54,19 +52,43 @@ const controlBookmark = function () {
     RecipeView.render(model.state.recipe);
 };
 
+const controlLoadBookmark = function () {
+    const storage = localStorage.getItem('bookmarks');
+    if (storage) model.state.bookmark = JSON.parse(storage);
+
+    Bookmark.render(model.state.bookmark);
+};
+
 const controlServings = function (newServing) {
     model.updateServing(model.state.recipe, newServing);
 
     RecipeView.render(model.state.recipe);
 };
 
-const controlPostRecipe = function () {
-    console.log('clicked');
+const controlPostRecipe = async function (inputForm) {
+    const postData = model.changeData(inputForm);
+
+    await model.sendRecipe(postData);
+
+    model.addBookmark(model.state.recipe);
+    Bookmark.render(model.state.bookmark);
+
+    RecipeView.render(model.state.recipe);
+
+    model.resultPagination(model.state.page);
+
+    Pagination.render();
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    PostRecipe.toggleModal();
 };
+
 const init = function () {
     window.location.hash = '';
     RecipeView.addHandlerRecipe(controlShowRecipe);
     Bookmark.addHandlerBookmark(controlBookmark);
+    Bookmark.addHandlerLoadBookmark(controlLoadBookmark);
     Servings.addHandlerServing(controlServings);
     ResultsView.addHandlerSearchResult(controlSearchResult);
     Pagination.addHandlerPagination(controlSearchResult);

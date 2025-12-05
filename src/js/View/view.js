@@ -9,6 +9,8 @@ export default class View {
         this._data = data;
         const html = this._getHTML();
 
+        if (!html) return;
+
         this._parentElement.insertAdjacentHTML('beforeend', html);
     }
 

@@ -14,21 +14,23 @@ class PostRecipe extends View {
 
     constructor() {
         super();
-        this._btnOpen.addEventListener('click', this._toggleModal.bind(this));
-        this._btnClose.addEventListener('click', this._toggleModal.bind(this));
-        this._overlay.addEventListener('click', this._toggleModal.bind(this));
+        this._btnOpen.addEventListener('click', this.toggleModal.bind(this));
+        this._btnClose.addEventListener('click', this.toggleModal.bind(this));
+        this._overlay.addEventListener('click', this.toggleModal.bind(this));
     }
 
-    _toggleModal() {
+    toggleModal() {
         this._overlay.classList.toggle('hidden');
         this._window.classList.toggle('hidden');
     }
 
     addUploadRecipeHandler(handlerFn) {
-        this._parentElement.addEventListener('submit', function (e) {
+        this._parentElement.addEventListener('submit', e => {
             e.preventDefault();
+            const fromData = new FormData(this._parentElement);
+            const formDataObject = Object.fromEntries(fromData.entries());
 
-            handlerFn();
+            handlerFn(formDataObject);
         });
     }
 }

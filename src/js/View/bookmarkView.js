@@ -18,6 +18,10 @@ class Bookmark extends View {
         });
     }
 
+    addHandlerLoadBookmark(handlerFn) {
+        window.addEventListener('load', handlerFn);
+    }
+
     _getHTML() {
         this._headerListBookmark.innerHTML = '';
 
