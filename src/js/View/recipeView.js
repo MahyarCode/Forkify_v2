@@ -14,6 +14,9 @@ class RecipeView extends View {
         if (!this._data) return;
         this._parentElement.innerHTML = '';
 
+        console.log(this._data.bookmark);
+        console.log(this._data);
+
         return `
         <figure class="recipe__fig">
           <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
@@ -57,11 +60,18 @@ class RecipeView extends View {
             </div>
           </div>
 
-          <div class="recipe__user-generated">
+          ${
+              this._data.key
+                  ? `
+          <div class="recipe__user-generated">  
             <svg>
               <use href="${icons}#icon-user"></use>
             </svg>
           </div>
+          `
+                  : ''
+          }
+          
           <button class="btn--round">
             <svg class="">
               <use href="${icons}#icon-bookmark${this._data.bookmark ? '-fill' : ''}"></use>

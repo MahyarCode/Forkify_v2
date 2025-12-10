@@ -1,4 +1,5 @@
 'use strict';
+import axios from 'axios';
 
 const timeout = function (s) {
     return new Promise(function (_, reject) {
@@ -8,11 +9,15 @@ const timeout = function (s) {
     });
 };
 
-export const fetchAPI = async function (url) {
+export const fetchAPI = async function (url, data = undefined) {
     try {
-        const response = await fetch(url);
-        const data = await response.json();
-        return data;
+        if (!data) {
+            const response = await axios.get(url);
+            return response.data;
+        } else {
+            const response = await axios.post(url, data);
+            return response.data;
+        }
     } catch (err) {
         console.error(`❌❌${err}❌❌`);
     }

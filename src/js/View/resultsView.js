@@ -21,18 +21,27 @@ class ResultsView extends View {
             .map(obj => {
                 return `
           <li class="preview">
-            <a class="preview__link" href="#${obj.id}">
+            <a class="preview__link ${
+                obj.id === window.location.hash.slice(1) ? 'preview__link--active' : ''
+            }" href="#${obj.id}">
               <figure class="preview__fig">
                 <img src="${obj.image}" alt="Test" />
               </figure>
               <div class="preview__data">
                 <h4 class="preview__title">${obj.title}</h4>
                 <p class="preview__publisher">${obj.publisher}</p>
+                ${
+                    obj.key
+                        ? `
                 <div class="preview__user-generated">
                   <svg>
                     <use href="${icons}#icon-user"></use>
                   </svg>
                 </div>
+                `
+                        : ''
+                }
+                
               </div>
             </a>
           </li>

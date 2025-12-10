@@ -30,6 +30,10 @@ const controlShowRecipe = async function () {
 
     await model.loadRecipe();
 
+    Bookmark.render(model.state.bookmark);
+
+    ResultsView.render(model.state.currentPageResult);
+
     setTimeout(() => {
         if (!model.state.results) return;
         if (Object.keys(model.state.recipe).length === 0) return;
@@ -71,7 +75,6 @@ const controlPostRecipe = async function (inputForm) {
     await model.sendRecipe(postData);
 
     model.addBookmark(model.state.recipe);
-    Bookmark.render(model.state.bookmark);
 
     RecipeView.render(model.state.recipe);
 
@@ -86,12 +89,19 @@ const controlPostRecipe = async function (inputForm) {
 
 const init = function () {
     window.location.hash = '';
+
     RecipeView.addHandlerRecipe(controlShowRecipe);
+
+    model.getBookmarks();
     Bookmark.addHandlerBookmark(controlBookmark);
     Bookmark.addHandlerLoadBookmark(controlLoadBookmark);
+
     Servings.addHandlerServing(controlServings);
+
     ResultsView.addHandlerSearchResult(controlSearchResult);
+
     Pagination.addHandlerPagination(controlSearchResult);
+
     PostRecipe.addUploadRecipeHandler(controlPostRecipe);
 };
 init();

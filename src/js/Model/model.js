@@ -99,6 +99,13 @@ export const deleteBookmark = function (recipe) {
     localStorage.setItem('bookmarks', JSON.stringify(state.bookmark));
 };
 
+export const getBookmarks = function () {
+    const data = localStorage.getItem('bookmarks');
+    state.bookmark = JSON.parse(data);
+
+    console.log('state', state);
+};
+
 // TODO servings ---------------------------------------------------------
 export const updateServing = function (recipe, newServing) {
     state.recipe.ingredients.forEach(ing => {
@@ -133,20 +140,13 @@ export const changeData = function (form) {
 };
 
 export const sendRecipe = async function (sendData) {
-    const apiUrl = `https://forkify-api.herokuapp.com/api/v2/recipes?search=${state.searchQuery}&key=${API_KEY}`; // Replace with your API endpoint
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-    };
+    const apiUrl = `https://forkify-api.herokuapp.com/api/v2/recipes?search=${state.searchQuery}&key=${API_KEY}`;
 
-    const sentData = await fetch(apiUrl, requestOptions);
-    const userData = await sentData.json();
+    const sentData = await fetchAPI(apiUrl, sendData);
 
-    userData.data.recipe.bookmark = true;
+    sentData.data.recipe.bookmark = true;
 
-    state.recipe = createRecipe(userData.data.recipe);
-    state.results.unshift(userData.data.recipe);
+    state.recipe = createRecipe(sentData.data.recipe);
+
+    state.results.unshift(sentData.data.recipe);
 };
